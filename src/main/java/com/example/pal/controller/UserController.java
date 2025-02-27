@@ -1,8 +1,5 @@
 package com.example.pal.controller;
 
-import com.example.pal.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.pal.model.User;
 import com.example.pal.service.UserService;
+import com.example.pal.model.User;
 
 @RestController
 @RequestMapping("/api/users")
@@ -29,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public String createUser(@RequestParam String username,
+    public ResponseEntity<User> createUser(@RequestParam String username,
                              @RequestParam String password,
                              @RequestParam String[] roles) {
         User user = userService.createUserWithRoles(username, password, roles);

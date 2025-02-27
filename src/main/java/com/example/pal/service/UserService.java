@@ -25,7 +25,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void createUserWithRoles(String username, String password, String[] roleNames) {
+    public User createUserWithRoles(String username, String password, String[] roleNames) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
