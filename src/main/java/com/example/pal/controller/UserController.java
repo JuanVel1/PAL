@@ -1,5 +1,6 @@
 package com.example.pal.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +27,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestParam String username,
-                             @RequestParam String password,
-                             @RequestParam String[] roles) {
+    public ResponseEntity<User> createUser(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("roles") String[] roles) {
+
         User user = userService.createUserWithRoles(username, password, roles);
         return ResponseEntity.status(201).body(user);
     }
