@@ -25,9 +25,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll() 
-                .requestMatchers("/api/users/create").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
+                // .requestMatchers("/h2-console/**").permitAll() 
+                // .requestMatchers("/api/users/create").permitAll()
+                // .requestMatchers("/api/users/all").permitAll()
+                //.anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions().disable()); 
         return http.build();

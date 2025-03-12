@@ -1,17 +1,21 @@
 package com.example.pal.service;
 
-import com.example.pal.model.Role;
-import com.example.pal.model.User;
-import com.example.pal.repository.RoleRepository;
-import com.example.pal.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.pal.dto.CreateUserDTO;
+import com.example.pal.dto.UserDTO;
+import com.example.pal.model.Role;
+import com.example.pal.model.User;
+import com.example.pal.repository.RoleRepository;
+import com.example.pal.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -25,13 +29,16 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void createUserWithRoles(String username, String password, String[] roleNames) {
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public User createUserWithRoles(CreateUserDTO userDTO) {
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         Set<Role> roles = new HashSet<>();
-        for (String roleName : roleNames) {
+        for (String roleName : userDTO.getRoles()) {
             Optional<Role> roleOpt = roleRepository.findByName(roleName);
             Role role = roleOpt.orElseGet(() -> {
                 Role newRole = new Role();
@@ -45,8 +52,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
     }
 
     public Optional<User> getUserById(Long id) {
