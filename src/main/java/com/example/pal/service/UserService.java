@@ -33,6 +33,15 @@ public class UserService {
     private ModelMapper modelMapper;
 
     public User createUserWithRoles(CreateUserDTO userDTO) {
+
+        //Verificar si el usuario ya existe en la base de datos antes de crearlo.
+        //Si el usuario ya existe, debe devolver un mensaje de error que diga "User already exists".
+        //Si el usuario no existe, debe crearlo y devolver un mensaje de éxito que diga "User created successfully".
+        //El método debe devolver un objeto de tipo User.
+        if (userRepository.findByUsername(userDTO.getUsername()) != null) {
+            throw new RuntimeException("User already exists");
+        }
+        
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));

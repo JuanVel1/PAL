@@ -21,10 +21,14 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO<User>> createUser(@ModelAttribute CreateUserDTO userDTO) {
-
-        User user = userService.createUserWithRoles(userDTO);
-        ResponseDTO<User> response = new ResponseDTO<>("User created successfully", user);
-        return ResponseEntity.status(201).body(response);
+        try{
+            User user = userService.createUserWithRoles(userDTO);
+            ResponseDTO<User> response = new ResponseDTO<>("User created successfully", user);
+            return ResponseEntity.status(201).body(response);
+        } catch (RuntimeException e) {
+            ResponseDTO<User> response = new ResponseDTO<>(e.getMessage(), null);
+            return ResponseEntity.status(400).body(response);
+        }
     }
 
     @GetMapping("/all")

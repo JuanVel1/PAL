@@ -27,9 +27,14 @@ public class CategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO<Category>> createCategory(@RequestParam String name) {
-        Category category = categoryService.createCategory(name);
-        ResponseDTO<Category> response = new ResponseDTO<>("Category created successfully", category);
-        return ResponseEntity.status(201).body(response);
+        try {
+            Category category = categoryService.createCategory(name);
+            ResponseDTO<Category> response = new ResponseDTO<>("Category created successfully", category);
+            return ResponseEntity.status(201).body(response);
+        } catch (RuntimeException e) {
+            ResponseDTO<Category> response = new ResponseDTO<>(e.getMessage(), null);
+            return ResponseEntity.status(400).body(response);
+        }
     }
 
     @GetMapping("/all")
