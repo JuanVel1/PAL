@@ -15,43 +15,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/content")
 public class ContentController {
+    private final ContentService contentService;
 
-    @Autowired
-    private ContentService contentService;
+    public ContentController(ContentService contentService) {
+        this.contentService = contentService;
+    }
 
     @PostMapping("/upload")
-    public ResponseEntity<ContentDTO> uploadContent(@RequestParam("file") MultipartFile file,
-                                                    @RequestParam("type") String type,
-                                                    @RequestParam("courseId") Long courseId) throws IOException {
-        // Crea un DTO con los parámetros de la solicitud
-        ContentUploadDTO contentUploadDTO = new ContentUploadDTO();
-        contentUploadDTO.setFile(file);
-        contentUploadDTO.setType(type);
-        contentUploadDTO.setCourseId(courseId);
-
-        // Llama al servicio para manejar la carga
-        ContentDTO contentDTO = contentService.uploadContent(contentUploadDTO);
-
-        // Devuelve la respuesta con el DTO
-        return ResponseEntity.ok(contentDTO);
+    public ResponseEntity<ContentDTO> uploadContent(@RequestBody ContentDTO contentDTO) {
+        return ResponseEntity.ok(contentService.uploadContent(contentDTO));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<ContentDTO>> getAllContent() {
-        List<ContentDTO> contentList = contentService.getAllContent();
-        return ResponseEntity.ok(contentList);
+        return ResponseEntity.ok(contentService.getAllContent());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ContentDTO> getContentById(@PathVariable Long id) {
-        ContentDTO contentDTO = contentService.getContentById(id);
-        return contentDTO != null ? ResponseEntity.ok(contentDTO) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(contentService.getContentById(id));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateContent(@PathVariable Long id, @ModelAttribute ContentUploadDTO contentUploadDTO) throws IOException {
-        contentService.updateContent(id, contentUploadDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ContentDTO> updateContent(@PathVariable Long id, @RequestBody ContentDTO contentDTO) {
+        return ResponseEntity.ok(contentService.updateContent(id, contentDTO));
     }
 
     @DeleteMapping("/delete/{id}")
