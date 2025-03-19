@@ -3,6 +3,7 @@ package com.example.pal.controller;
 
 import com.example.pal.dto.ContentDTO;
 import com.example.pal.dto.ContentUploadDTO;
+import com.example.pal.dto.ResponseDTO;
 import com.example.pal.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,24 +22,24 @@ public class ContentController {
         this.contentService = contentService;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<ContentDTO> uploadContent(@RequestBody ContentDTO contentDTO) {
-        return ResponseEntity.ok(contentService.uploadContent(contentDTO));
+    @PostMapping("/update")
+    public ResponseEntity<ResponseDTO<ContentDTO>> createContent(@RequestBody ContentDTO contentDTO) {
+        return contentService.createContent(contentDTO);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ContentDTO>> getAllContent() {
-        return ResponseEntity.ok(contentService.getAllContent());
+    public ResponseEntity<ResponseDTO<ContentDTO>> getAllContent() {
+        return contentService.getAllContent();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContentDTO> getContentById(@PathVariable Long id) {
-        return ResponseEntity.ok(contentService.getContentById(id));
+    public ResponseEntity<ResponseDTO<ContentDTO>> getContentById(@PathVariable Long id) {
+        return contentService.getContentById(id);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ContentDTO> updateContent(@PathVariable Long id, @RequestBody ContentDTO contentDTO) {
-        return ResponseEntity.ok(contentService.updateContent(id, contentDTO));
+    public ResponseEntity<ResponseDTO<ContentDTO>> updateContent(@PathVariable Long id, @RequestBody ContentDTO contentDTO) {
+        return contentService.updateContent(id, contentDTO);
     }
 
     @DeleteMapping("/delete/{id}")
