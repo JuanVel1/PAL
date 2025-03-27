@@ -11,10 +11,13 @@ public class Content {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "file_url")
+    private String fileUrl;
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
-
-    @Column(nullable = false)
-    private String type;
 }
