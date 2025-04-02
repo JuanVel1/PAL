@@ -6,10 +6,6 @@ import java.sql.SQLException;
 
 public class SupabaseDBTest {
     public static void main(String[] args) {
-        // URL JDBC para Supabase
-        String url = "jdbc:postgresql://db.cagbdawizukjxdlhzltb.supabase.co:5432/postgres";
-        String username = "postgres";  // Reemplázalo con el usuario correcto de Supabase
-        String password = "zTmRx4w7OUqk0czxGin8";  // Reemplázalo con la contraseña correcta
 
         try {
             // Cargar el driver de PostgreSQL
