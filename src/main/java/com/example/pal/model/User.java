@@ -25,6 +25,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore  // Evita que la contraseña se envíe en la respuesta JSON
     @Column(nullable = false)
     private String password;
 
