@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,13 +42,15 @@ public class UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEmail(userDTO.getEmail()); // Nuevo campo
 
         Set<Role> roles = new HashSet<>();
         for (String roleName : userDTO.getRoles()) {
-            Optional<Role> roleOpt = roleRepository.findByName(roleName);
+            String normalizedRoleName = roleName.trim().toLowerCase(); // Normaliza a minúsculas
+            Optional<Role> roleOpt = roleRepository.findByName(normalizedRoleName);
             Role role = roleOpt.orElseGet(() -> {
                 Role newRole = new Role();
-                newRole.setName(roleName);
+                newRole.setName(normalizedRoleName);
                 return roleRepository.save(newRole);
             });
             roles.add(role);
@@ -58,8 +61,10 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
+        List<User> users = userRepository.findAllWithRoles(); // Usar la consulta con JOIN FETCH
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     public Optional<User> getUserById(Long id) {

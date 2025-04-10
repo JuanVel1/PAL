@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import com.example.pal.dto.CreateUserDTO;
 import com.example.pal.dto.ResponseDTO;
 import com.example.pal.dto.UserDTO;
@@ -22,8 +23,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO<User>> createUser(@ModelAttribute CreateUserDTO userDTO) {
-        try{
+    public ResponseEntity<ResponseDTO<User>> createUser(@RequestBody CreateUserDTO userDTO) {
+        System.out.println("Password recibido: " + userDTO.getPassword()); // Debug
+        try {
             User user = userService.createUserWithRoles(userDTO);
             ResponseDTO<User> response = new ResponseDTO<>("User created successfully", user);
             return ResponseEntity.status(201).body(response);
@@ -34,14 +36,14 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO<UserDTO>> getAllUsers(){
+    public ResponseEntity<ResponseDTO<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         ResponseDTO<UserDTO> response = new ResponseDTO<>("Users retrieved successfully", users);
         return ResponseEntity.status(200).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO<User>> getUserById(@PathVariable Long id){
+    public ResponseEntity<ResponseDTO<User>> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         if (user.isEmpty()) {
             ResponseDTO<User> response = new ResponseDTO<>("User not found", null);
@@ -52,7 +54,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseDTO<User>> updateUser(@PathVariable Long id, @RequestBody User userDetails){
+    public ResponseEntity<ResponseDTO<User>> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
         if (updatedUser != null) {
             ResponseDTO<User> response = new ResponseDTO<>("User updated successfully", updatedUser);
@@ -64,8 +66,8 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-    	userService.deleteUser(id);
-    	return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
