@@ -1,8 +1,7 @@
 package com.example.pal.controller;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.example.pal.dto.CreateUserDTO;
@@ -24,7 +23,6 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO<User>> createUser(@RequestBody CreateUserDTO userDTO) {
-        System.out.println("Password recibido: " + userDTO.getPassword()); // Debug
         try {
             User user = userService.createUserWithRoles(userDTO);
             ResponseDTO<User> response = new ResponseDTO<>("User created successfully", user);
@@ -69,5 +67,17 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-role/{roleName}")
+    public ResponseEntity<ResponseDTO<UserDTO>> getUsersByRole(@PathVariable String roleName) {
+        try {
+            List<UserDTO> users = userService.getUsersByRole(roleName);
+            ResponseDTO<UserDTO> response = new ResponseDTO<>("Users retrieved successfully", users);
+            return ResponseEntity.status(200).body(response);
+        } catch (RuntimeException e) {
+            ResponseDTO<UserDTO> response = new ResponseDTO<>(e.getMessage(), Collections.emptyList());
+            return ResponseEntity.status(404).body(response);
+        }
     }
 }

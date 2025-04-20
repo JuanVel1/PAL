@@ -9,5 +9,5 @@ public class CreateUserDTO {
     private String username;
     private String password;
     private String email;
-    private List<String> roles; // Cambiar a List<String>
+    private String[] roles;
 }

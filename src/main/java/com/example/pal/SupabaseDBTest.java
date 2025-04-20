@@ -10,7 +10,7 @@ public class SupabaseDBTest {
         // Reemplaza con las variables de entorno
         String username = System.getenv("DB_USERNAME");
         String password = System.getenv("DB_PASSWORD");
-        String url = "jdbc:postgresql://ep-icy-hall-a5vp89l1-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require";
+        String url = System.getenv("DB_URL");
 
         System.out.println("Connecting to database...");
         System.out.println(username);

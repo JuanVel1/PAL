@@ -1,9 +1,6 @@
 package com.example.pal.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +14,7 @@ import com.example.pal.model.Role;
 import com.example.pal.model.User;
 import com.example.pal.repository.RoleRepository;
 import com.example.pal.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -33,35 +31,53 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Transactional
     public User createUserWithRoles(CreateUserDTO userDTO) {
 
         if (userRepository.findByUsername(userDTO.getUsername()) != null) {
             throw new RuntimeException("User already exists");
         }
+        if (userDTO.getRoles() == null || userDTO.getRoles().length == 0) {
+            throw new RuntimeException("User must have at least one role");
+        }
 
         User user = new User();
+        Set<Role> roles = new HashSet<>();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail()); // Nuevo campo
 
-        Set<Role> roles = new HashSet<>();
+
         for (String roleName : userDTO.getRoles()) {
-            String normalizedRoleName = roleName.trim().toLowerCase(); // Normaliza a minúsculas
-            Optional<Role> roleOpt = roleRepository.findByName(normalizedRoleName);
-            Role role = roleOpt.orElseGet(() -> {
-                Role newRole = new Role();
-                newRole.setName(normalizedRoleName);
-                return roleRepository.save(newRole);
-            });
+            String normalizedRoleName = roleName.trim().toLowerCase(); // Normaliza el nombre del rol
+            Role role = roleRepository.findByName(normalizedRoleName)
+                    .orElseGet(() -> {
+                        Role newRole = new Role();
+                        newRole.setName(normalizedRoleName); // Asigna un String simple
+                        return roleRepository.save(newRole);
+                    });
             roles.add(role);
         }
-
         user.setRoles(roles);
         return userRepository.save(user);
     }
 
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAllWithRoles(); // Usar la consulta con JOIN FETCH
+        List<User> users = userRepository.findAllWithRoles();
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getUsersByRole(String roleName) {
+        // Normaliza el nombre del rol de la misma manera que en createUserWithRoles
+        String normalizedRoleName = roleName.trim().toLowerCase();
+
+        Role role = roleRepository.findByName(normalizedRoleName)
+                .orElseThrow(() -> new RuntimeException("Role not found: " + normalizedRoleName));
+
+        List<User> users = userRepository.findUsersByRoles(Set.of(role));
+
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
@@ -74,15 +90,25 @@ public class UserService {
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found!"));
         user.setUsername(userDetails.getUsername());
-        if (user.getPassword() != null) {
+        user.setEmail(userDetails.getEmail());
+
+        // Solo actualiza la contraseña si se proporciona una nueva
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
-        user.setRoles(userDetails.getRoles());
+
+        // Actualiza los roles si se proporcionan
+        if (userDetails.getRoles() != null && !userDetails.getRoles().isEmpty()) {
+            user.setRoles(userDetails.getRoles());
+        }
+
         return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+
 }
                                                                                           
