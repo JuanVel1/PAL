@@ -6,6 +6,7 @@ import com.example.pal.model.Answer;
 import com.example.pal.model.Course;
 import com.example.pal.model.Exam;
 import com.example.pal.model.Question;
+import com.example.pal.dto.QuestionDTO;
 import com.example.pal.repository.AnswerRepository;
 import com.example.pal.repository.CourseRepository;
 import com.example.pal.repository.ExamRepository;
@@ -29,7 +30,7 @@ public class ExamService {
     @Autowired
     private AnswerRepository answerRepository;
 
-    public ExamResponseDTO createExam(CreateExamDTO examDTO) {
+    public Exam createExam(CreateExamDTO examDTO) {
         if (courseRepository.findByTitle(examDTO.getTitle()) != null) {
             throw new RuntimeException("Exam already exists");
         }
@@ -52,27 +53,47 @@ public class ExamService {
 
         exam.setQuestions(questions);
 
-        Exam savedExam = examRepository.save(exam);
-        return new ExamResponseDTO(savedExam);
+        return examRepository.save(exam);
+    }
+
+    public ExamResponseDTO mapToExamResponseDTO(Exam exam) {
+        ExamResponseDTO dto = new ExamResponseDTO();
+        dto.setId(exam.getId());
+        dto.setTitle(exam.getTitle());
+        dto.setCourseId(exam.getCourse().getId()); // Solo se asigna el ID
+
+        List<QuestionDTO> questions = exam.getQuestions().stream().map(q -> {
+            QuestionDTO qDto = new QuestionDTO();
+            qDto.setId(q.getId());
+            qDto.setText(q.getText());
+            return qDto;
+        }).collect(Collectors.toList());
+
+        dto.setQuestions(questions);
+
+        return dto;
     }
 
 
     public List<ExamResponseDTO> getAllExams() {
-        return examRepository.findAll().stream()
-                .map(ExamResponseDTO::new)
-                .collect(Collectors.toList());
-    }
+        List<Exam> exams = examRepository.findAll();
 
-    public ExamResponseDTO getExamResults(Long examId) {
-        Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
-        return new ExamResponseDTO(exam);
+        return exams.stream().map(exam -> {
+            List<QuestionDTO> questionDTOs = exam.getQuestions().stream().map(question -> {
+                return new QuestionDTO(question.getId(), question.getText(), exam.getId());
+            }).collect(Collectors.toList());
+            return new ExamResponseDTO(exam.getId(), exam.getTitle(), exam.getCourse().getId(), questionDTOs);
+        }).collect(Collectors.toList());
     }
 
     public void deleteExamById(Long id) {
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + id));
         examRepository.delete(exam);
+    }
+
+    public Optional<Exam> getExamById(Long id) {
+        return examRepository.findById(id);
     }
 
     public int evaluateExam(Long examId, Map<Long, String> answersUser) {

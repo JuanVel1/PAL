@@ -1,15 +1,16 @@
 package com.example.pal.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.Map;
+
+import jakarta.persistence.*; 
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "exam_results")
 public class ExamResult {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

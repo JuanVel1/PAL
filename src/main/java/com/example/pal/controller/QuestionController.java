@@ -1,9 +1,6 @@
 package com.example.pal.controller;
-
-import com.example.pal.dto.QuestionDTO;
 import com.example.pal.dto.QuestionResponseDTO;
-import com.example.pal.dto.ResponseDTO;
-import com.example.pal.model.Question;
+import com.example.pal.dto.ResponseDTO; 
 import com.example.pal.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/exams")
@@ -48,6 +45,16 @@ public class ExamController {
         return ResponseEntity.status(200).body(response);
     }
 
+    @GetMapping("/{examId}")
+    public ResponseEntity<ResponseDTO<ExamResponseDTO>> getExamById(@PathVariable Long examId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new RuntimeException("Exam not found"));
+
+        ExamResponseDTO examDTO = examService.mapToExamResponseDTO(exam);
+
+        return ResponseEntity.ok(new ResponseDTO<>("Exam retrieved successfully", examDTO));
+    }
+
     @GetMapping("/results/{examId}")
     public ResponseEntity<ResponseDTO<ExamResultDTO>> getExamResult(
             @PathVariable Long examId,
@@ -76,8 +83,8 @@ public class ExamController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO<ExamResponseDTO>> createExam(@RequestBody CreateExamDTO examDTO) {
-        ExamResponseDTO createdExam = examService.createExam(examDTO);
+    public ResponseEntity<ResponseDTO<Exam>> createExam(@RequestBody CreateExamDTO examDTO) {
+        Exam createdExam = examService.createExam(examDTO);
         return ResponseEntity.ok(new ResponseDTO<>("Exam created successfully", createdExam));
     }
 
@@ -111,5 +118,7 @@ public class ExamController {
 
         return ResponseEntity.ok(result);
     }
-
 }
+
+
+

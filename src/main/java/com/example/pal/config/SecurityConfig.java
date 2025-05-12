@@ -1,5 +1,6 @@
 package com.example.pal.config;
 
+import org.springframework.lang.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +23,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public Dotenv dotenv() {
+        return Dotenv.load();
+    }
 
     @SuppressWarnings("removal")
     @Bean
@@ -46,7 +52,7 @@ public class SecurityConfig {
     @Configuration
     public static class WebConfig implements WebMvcConfigurer {
         @Override
-        public void addCorsMappings(CorsRegistry registry) {
+        public void addCorsMappings(@NonNull CorsRegistry registry) {
             registry.addMapping("/**")
                     .allowedOrigins("http://localhost:5173")  // Permitir solicitudes desde el frontend
                     .allowedMethods("GET", "POST", "PUT", "DELETE")  // Métodos permitidos
