@@ -3,8 +3,7 @@ package com.example.pal.service;
 
 import com.example.pal.dto.ContentDTO;
 import com.example.pal.model.Content;
-import com.example.pal.model.Course;
-import com.example.pal.repository.CourseRepository;
+import com.example.pal.model.Course; 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import com.example.pal.dto.ResponseDTO;
 @Service
 public class ContentService {
     @Autowired
-    private ContentRepository contentRepository;
+    private final ContentRepository contentRepository;
 
     @Autowired
     private CourseService courseService;

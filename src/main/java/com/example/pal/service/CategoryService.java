@@ -15,10 +15,6 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     public Category createCategory(String name) {
-        //Verificar si la categoría ya existe en la base de datos antes de crearla.
-        //Si la categoría ya existe, debe devolver un mensaje de error que diga "Category already exists".
-        //Si la categoría no existe, debe crearla y devolver un mensaje de éxito que diga "Category created successfully".
-        //El método debe devolver un objeto de tipo Category.
         if (categoryRepository.findByName(name) != null) {
             throw new RuntimeException("Category already exists");
         }
@@ -36,13 +32,19 @@ public class CategoryService {
         return categoryRepository.findById(id);
     }
 
+    public Optional<Category> getCategoryByName(String name) {
+        return Optional.ofNullable(categoryRepository.findByName(name));
+    }
+
     public Category updateCategory(Long id, String name) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found!"));
         category.setName(name);
         return categoryRepository.save(category);
     }
 
+
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
+
 }

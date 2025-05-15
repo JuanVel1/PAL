@@ -3,6 +3,8 @@ package com.example.pal.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "question")
@@ -19,5 +21,7 @@ public class Question {
     @Column(nullable = false)
     private String text;
 
-    // Otros atributos de la pregunta, como opciones, respuesta correcta, etc.
+    // Añadir esta relación con las respuestas
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Answer> answers;
 }
