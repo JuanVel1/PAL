@@ -55,6 +55,10 @@ public class CourseService {
         return CourseRepository.findById(id);
     }
 
+    public List<Course> getCoursesByCategory(String categoryName) {
+        return CourseRepository.findByCategoryName(categoryName);
+    }
+
     public Course updateCourse(Long id, String name) {
         Course Course = CourseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found!"));
         Course.setTitle(name);

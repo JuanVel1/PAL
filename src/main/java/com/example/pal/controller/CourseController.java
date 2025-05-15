@@ -48,6 +48,12 @@ public class CourseController {
         ResponseDTO<Course> response = new ResponseDTO<>("Courses retrieved successfully", courses);
         return ResponseEntity.status(200).body(response);
     }
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<ResponseDTO<Course>> getCoursesByCategory(@PathVariable String categoryName) {
+        List<Course> courses = CourseService.getCoursesByCategory(categoryName);
+        ResponseDTO<Course> response = new ResponseDTO<>("Courses retrieved successfully", courses);
+        return ResponseEntity.status(200).body(response);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO<Course>> getCourseById(@PathVariable Long id) {

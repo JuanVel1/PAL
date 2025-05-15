@@ -1,17 +1,10 @@
-// ContentController.java
 package com.example.pal.controller;
-
-import com.example.pal.dto.ContentDTO;
-import com.example.pal.dto.ContentUploadDTO;
+import com.example.pal.dto.ContentDTO; 
 import com.example.pal.dto.ResponseDTO;
-import com.example.pal.service.ContentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.pal.service.ContentService; 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
+import org.springframework.web.bind.annotation.*; 
+ 
 
 @RestController
 @RequestMapping("/api/content")

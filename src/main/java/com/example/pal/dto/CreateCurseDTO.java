@@ -11,5 +11,5 @@ public class CreateCurseDTO {
     private double price;
     private String status;
     private double average_grade;
-    
+
 }

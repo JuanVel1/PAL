@@ -1,44 +1,62 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.2'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
+    toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+repositories {
+    mavenCentral()
 }
 
-repositories {
-	mavenCentral()
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    } 
 }
 
 dependencies {
-	implementation 'com.h2database:h2:2.1.214'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'org.modelmapper:modelmapper:3.1.0'
-	implementation 'mysql:mysql-connector-java:8.0.29'
-}
+    // Spring Boot starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    
+    // Database
+    implementation 'com.h2database:h2'
+    implementation 'org.postgresql:postgresql'
+    
+    // Utilities
+    implementation 'org.modelmapper:modelmapper:3.2.0'
+    implementation 'me.paulschwarz:spring-dotenv:3.0.0'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+    implementation 'com.itextpdf:itextpdf:5.5.13.3'
+    implementation 'com.itextpdf:itext7-core:8.0.2'
+    implementation 'com.itextpdf:html2pdf:4.0.5'
 
+    // Development
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+ 
+ 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
+ 
+ 
