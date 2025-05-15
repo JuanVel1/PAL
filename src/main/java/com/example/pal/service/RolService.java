@@ -13,13 +13,17 @@ public class RolService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public Role createRol(String rolName){
+    public Role createRol(String rolName) {
         Role rol = new Role();
         rol.setName(rolName);
         return roleRepository.save(rol);
     }
 
-    public List<Role> getAllRoles(){
+    public List<Role> getAllRoles() {
         return roleRepository.findAll();
+    }
+
+    public void deleteRol(Long id) {
+        roleRepository.deleteById(id);
     }
 }
