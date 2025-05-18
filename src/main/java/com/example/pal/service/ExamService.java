@@ -86,6 +86,17 @@ public class ExamService {
         }).collect(Collectors.toList());
     }
 
+    public List<ExamResponseDTO> getAllExamsByCourse(Long courseId) {
+        List<Exam> exams = examRepository.findByCourseId(courseId);
+
+        return exams.stream().map(exam -> {
+            List<QuestionDTO> questionDTOs = exam.getQuestions().stream().map(question -> {
+                return new QuestionDTO(question.getId(), question.getText(), exam.getId());
+            }).collect(Collectors.toList());
+            return new ExamResponseDTO(exam.getId(), exam.getTitle(), exam.getCourse().getId(), questionDTOs);
+        }).collect(Collectors.toList());
+    }
+
     public void deleteExamById(Long id) {
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + id));

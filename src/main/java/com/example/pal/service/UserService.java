@@ -45,8 +45,9 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail()); // Nuevo campo
-
+        user.setEmail(userDTO.getEmail());
+        /* user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());*/
 
         for (String roleName : userDTO.getRoles()) {
             String normalizedRoleName = roleName.trim().toLowerCase(); // Normaliza el nombre del rol
