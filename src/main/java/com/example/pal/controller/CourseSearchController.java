@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/courses")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CourseSearchController {
 
     @Autowired
