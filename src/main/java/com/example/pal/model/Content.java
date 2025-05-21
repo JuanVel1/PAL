@@ -17,7 +17,10 @@ public class Content {
     @Column(name = "file_url")
     private String fileUrl;
 
+    @Column(name = "name_file")
+    private String nameFile;
+
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 }
