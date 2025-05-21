@@ -29,10 +29,40 @@ public class CourseService {
         if (categoryRepository.findByName(createCurseDTO.getCategory()) == null) {
             throw new RuntimeException("Category not found!");
         }
-
         // Validate that the instructor exists
         if (!userRepository.existsById(createCurseDTO.getInstructorId())) {
             throw new RuntimeException("Instructor not found!");
+        }
+        // Validate that the course title is not empty
+        if (createCurseDTO.getTitle() == null || createCurseDTO.getTitle().isEmpty()) {
+            throw new RuntimeException("Course title cannot be empty!");
+        }
+        // Validate that the course description is not empty
+        if (createCurseDTO.getDescription() == null || createCurseDTO.getDescription().isEmpty()) {
+            throw new RuntimeException("Course description cannot be empty!");
+        }
+        // Validate that the course price is not negative
+        if (createCurseDTO.getPrice() < 0) {
+            throw new RuntimeException("Course price cannot be negative!");
+        }
+        // Validate that the course status is not empty
+        if (createCurseDTO.getStatus() == null || createCurseDTO.getStatus().isEmpty()) {
+            throw new RuntimeException("Course status cannot be empty!");
+        }
+        // Validate that the course average grade is not negative
+        if (createCurseDTO.getAverage_grade() < 0) {
+            throw new RuntimeException("Course average grade cannot be negative!");
+        }
+        // Validate that the course difficulty level is not empty
+        if (createCurseDTO.getDifficultyLevel() == null || createCurseDTO.getDifficultyLevel().isEmpty()) {
+            throw new RuntimeException("Course difficulty level cannot be empty!");
+        }
+        // Validate that the course difficulty level is in BEGINNER, INTERMEDIATE, ADVANCED, ALL
+        if (!createCurseDTO.getDifficultyLevel().equals("BEGINNER") &&
+                !createCurseDTO.getDifficultyLevel().equals("INTERMEDIATE") &&
+                !createCurseDTO.getDifficultyLevel().equals("ADVANCED") &&
+                !createCurseDTO.getDifficultyLevel().equals("ALL")) {
+            throw new RuntimeException("Course difficulty level must be BEGINNER, INTERMEDIATE, ADVANCED or ALL!");
         }
 
         Course Course = new Course();
@@ -43,6 +73,9 @@ public class CourseService {
         Course.setPrice(createCurseDTO.getPrice());
         Course.setStatus(createCurseDTO.getStatus());
         Course.setAverage_grade(createCurseDTO.getAverage_grade());
+        Course.setDifficultyLevel(createCurseDTO.getDifficultyLevel());
+        Course.setPublicationDate(createCurseDTO.getPublicationDate());
+        Course.setDurationInHours(createCurseDTO.getDurationInHours());
 
         return CourseRepository.save(Course);
     }

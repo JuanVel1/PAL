@@ -14,7 +14,7 @@ import com.example.pal.service.CourseService;
 
 @RestController
 @RequestMapping("/api/courses")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CourseController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class CourseController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO<Course>> createCourse(@ModelAttribute CreateCurseDTO createCurseDTO) 
+    public ResponseEntity<ResponseDTO<Course>> createCourse(@RequestBody CreateCurseDTO createCurseDTO) 
     {
         try 
         {

@@ -7,28 +7,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*; 
 
 import java.util.List;
 import java.util.Optional;
 
+import com.example.pal.dto.CreateCategoryDTO;
 import com.example.pal.dto.ResponseDTO;
 import com.example.pal.model.Category;
 import com.example.pal.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO<Category>> createCategory(@RequestParam String name) {
+    public ResponseEntity<ResponseDTO<Category>> createCategory(@RequestBody CreateCategoryDTO categoryDTO) {
         try {
-            Category category = categoryService.createCategory(name);
+            Category category = categoryService.createCategory(categoryDTO.getName());
             ResponseDTO<Category> response = new ResponseDTO<>("Category created successfully", category);
             return ResponseEntity.status(201).body(response);
         } catch (RuntimeException e) {
@@ -54,8 +56,8 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseDTO<Category>> updateCategory(@PathVariable Long id, @RequestParam String name) {
-        Category updatedCategory = categoryService.updateCategory(id, name);
+    public ResponseEntity<ResponseDTO<Category>> updateCategory(@PathVariable Long id, @RequestBody CreateCategoryDTO categoryDTO) {
+        Category updatedCategory = categoryService.updateCategory(id, categoryDTO.getName());
 
         if (updatedCategory != null) {
             return ResponseEntity.ok(new ResponseDTO<>("Category updated successfully", updatedCategory));
