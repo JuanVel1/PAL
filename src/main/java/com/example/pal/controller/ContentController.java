@@ -41,15 +41,7 @@ public class ContentController {
             @ModelAttribute ContentDTO contentDTO
     ) {
         try {
-
             if (file != null) {
-                // Validar el tipo de archivo
-                String contentType = file.getContentType();
-                if (contentType == null || !contentType.startsWith("application/pdf")) {
-                    return ResponseEntity.badRequest()
-                        .body(new ResponseDTO<>("Solo se permiten archivos PDF", null));
-                }
-
                 // Guardar el archivo
                 String fileName = fileStorageService.storeFile(file);
                 contentDTO.setNameFile(fileName);
@@ -92,11 +84,12 @@ public class ContentController {
             }
 
             byte[] fileBytes = Files.readAllBytes(filePath);
+            String fileName = content.get().getNameFile();
+            String contentType = Files.probeContentType(filePath);
 
             response.reset();
-            response.setContentType("application/pdf");
-            // Usa el nombre real del archivo o uno genérico
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + content.get().getNameFile() + "\"");
+            response.setContentType(contentType != null ? contentType : "application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             response.setContentLength(fileBytes.length);
             response.getOutputStream().write(fileBytes);
             response.getOutputStream().flush();
