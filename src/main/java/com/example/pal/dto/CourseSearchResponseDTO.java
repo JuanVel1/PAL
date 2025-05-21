@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 public class CourseSearchResponseDTO {
-    private List<CourseDTO> courses;
+    private List<CurseDTO> courses;
     private int totalResults;
     private int page;
     private int pageSize;

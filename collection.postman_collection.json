@@ -149,7 +149,7 @@
         "name": "Contenido",
         "item": [
           {
-            "name": "Crear Contenido",
+            "name": "Crear/Actualizar Contenido",
             "request": {
               "method": "POST",
               "url": "{{baseUrl}}/api/content/update",
@@ -159,11 +159,11 @@
                   {
                     "key": "file",
                     "type": "file",
-                    "src": "/ruta/al/archivo.pdf"
+                    "src": "/ruta/al/archivo"
                   },
                   {
                     "key": "type",
-                    "value": "PDF",
+                    "value": "DOCUMENTO",
                     "type": "text"
                   },
                   {
@@ -203,7 +203,7 @@
               "url": "{{baseUrl}}/api/content/update/1",
               "body": {
                 "mode": "raw",
-                "raw": "{\n    \"type\": \"PDF\",\n    \"courseId\": 1\n}",
+                "raw": "{\n    \"type\": \"DOCUMENTO\",\n    \"courseId\": 1\n}",
                 "options": {
                   "raw": {
                     "language": "json"
