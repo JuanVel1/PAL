@@ -1,5 +1,7 @@
 package com.example.pal.model;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,4 +36,12 @@ public class Course {
     @Column(nullable = false)
     private double average_grade;
 
+    @Column(nullable = false)
+    private String difficultyLevel;
+
+    @Column(nullable = false)
+    private Date publicationDate;
+
+    @Column(nullable = false)
+    private int durationInHours;
 }

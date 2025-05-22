@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/content")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ContentController {
     private final ContentService contentService;
 
@@ -39,5 +40,10 @@ public class ContentController {
     public ResponseEntity<Void> deleteContent(@PathVariable Long id) {
         contentService.deleteContent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<ResponseDTO<ContentDTO>> getByContentId(@PathVariable Long courseId) {
+        return contentService.findByCourseId(courseId);
     }
 }

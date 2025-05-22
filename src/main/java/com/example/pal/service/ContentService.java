@@ -108,4 +108,14 @@ public class ContentService {
         ResponseDTO<Void> response = new ResponseDTO<>("Content deleted successfully", null);
         return ResponseEntity.status(204).body(response);  // 204 No Content
     }
+
+    public ResponseEntity<ResponseDTO<ContentDTO>> findByCourseId(Long courseId) {
+        List<ContentDTO> contentList = contentRepository.findByCourseId(courseId)
+                .stream()
+                .map(content -> modelMapper.map(content, ContentDTO.class))
+                .collect(Collectors.toList());
+
+        ResponseDTO<ContentDTO> response = new ResponseDTO<>("Contents retrieved successfully", contentList);
+        return ResponseEntity.status(200).body(response);
+    }
 }

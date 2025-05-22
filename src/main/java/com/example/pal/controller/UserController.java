@@ -16,6 +16,7 @@ import com.example.pal.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
