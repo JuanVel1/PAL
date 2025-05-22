@@ -2,11 +2,10 @@ package com.example.pal.service;
 
 import com.example.pal.dto.CourseProgressReportDTO;
 import com.example.pal.model.Course;
-import com.example.pal.model.CourseStudent;
+import com.example.pal.model.Enrollment;
 import com.example.pal.model.User;
 import com.example.pal.model.ExamResult;
 import com.example.pal.repository.CourseRepository;
-import com.example.pal.repository.CourseStudentRepository;
 import com.example.pal.repository.ExamResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class CourseReportService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private CourseStudentRepository userRepository;
+    private EnrollmentService enrollmentService;
 
     @Autowired
     private ExamResultRepository examResultRepository;
@@ -35,7 +34,7 @@ public class CourseReportService {
         report.setCourseTitle(course.getTitle());
 
         // Obtener todos los estudiantes inscritos en el curso
-        List<User> students = userRepository.findByCourseId(courseId).stream().map(CourseStudent::getUser).collect(Collectors.toList());
+        List<User> students = enrollmentService.findByCourseId(courseId).stream().map(Enrollment::getUser).collect(Collectors.toList());
 
         // Generar el progreso de cada estudiante
         List<CourseProgressReportDTO.StudentProgressDTO> studentProgress = students.stream()

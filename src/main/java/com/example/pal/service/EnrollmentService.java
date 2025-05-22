@@ -84,4 +84,12 @@ public class EnrollmentService {
         }
         return enrollmentRepository.findByUserId(userId);
     }
+
+    public List<Enrollment> findByCourseId(Long courseId) {
+        return enrollmentRepository.findByCourseId(courseId);
+    }
+
+    public List<Enrollment> findByUserIdAndCourseId(Long userId, Long courseId) {
+        return enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
+    }
 }

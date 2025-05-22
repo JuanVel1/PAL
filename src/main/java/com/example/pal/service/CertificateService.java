@@ -11,6 +11,8 @@ import com.example.pal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.Collectors;
+import com.example.pal.model.Enrollment;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +31,9 @@ public class CertificateService {
     private UserRepository userRepository;
 
     @Autowired
+    private EnrollmentService enrollmentService;
+
+    @Autowired
     private ExamRepository examRepository;
 
     @Autowired
@@ -36,14 +41,23 @@ public class CertificateService {
 
     @Transactional
     public Certificate generateCertificate(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        Enrollment enrollment = enrollmentService.findByUserIdAndCourseId(userId, courseId).get(0);
+        if (enrollment == null) {
+            throw new RuntimeException("El usuario no está inscrito en el curso");
+        }
+
+        Course course = enrollment.getCourse();
         
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        User user = enrollment.getUser();
 
         // Verificar si el estudiante ha aprobado todos los exámenes del curso
         List<Exam> courseExams = examRepository.findByCourseId(courseId);
+
+        if (courseExams.isEmpty()) {
+            throw new RuntimeException("El curso no tiene exámenes disponibles");
+        }
+
         boolean allExamsPassed = courseExams.stream()
                 .allMatch(exam -> exam.getExamResults().stream()
                         .anyMatch(result -> result.getStudent().getId().equals(userId) && result.getScore() >= 3));

@@ -17,10 +17,10 @@ public class CertificateController {
     @Autowired
     private CertificateService certificateService;
 
-    @PostMapping("/generate/{courseId}")
+    @PostMapping("/generate/{courseId}/{userId}")
     public ResponseEntity<ResponseDTO<Certificate>> generateCertificate(
             @PathVariable Long courseId,
-            @RequestParam Long userId) {
+            @PathVariable Long userId) {
         try {
             Certificate certificate = certificateService.generateCertificate(courseId, userId);
             ResponseDTO<Certificate> response = new ResponseDTO<>("Certificate generated succesfully", certificate);
