@@ -1,6 +1,6 @@
 package com.example.pal.service;
 
-import com.example.pal.dto.CurseDTO;
+import com.example.pal.dto.CourseDTO;
 import com.example.pal.dto.CourseSearchRequestDTO;
 import com.example.pal.dto.CourseSearchResponseDTO;
 import com.example.pal.model.Course;
@@ -65,13 +65,13 @@ public class CourseSearchService {
         }
 
         // Transformar resultados a DTOs
-        List<CurseDTO> CurseDTOs = coursesPage.getContent().stream()
+        List<CourseDTO> CourseDTOs = coursesPage.getContent().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
 
         // Crear respuesta
         CourseSearchResponseDTO response = new CourseSearchResponseDTO();
-        response.setCourses(CurseDTOs);
+        response.setCourses(CourseDTOs);
         response.setTotalResults((int) coursesPage.getTotalElements());
         
         response.setPage(page);
@@ -112,10 +112,10 @@ public class CourseSearchService {
     }
     
     /**
-     * Convierte una entidad Course a CurseDTO
+     * Convierte una entidad Course a CourseDTO
      */
-    private CurseDTO mapToDTO(Course course) {
-        CurseDTO dto = new CurseDTO();
+    private CourseDTO mapToDTO(Course course) {
+        CourseDTO dto = new CourseDTO();
         dto.setId(course.getId());
         dto.setTitle(course.getTitle());
         dto.setDescription(course.getDescription());
