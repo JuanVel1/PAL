@@ -23,5 +23,7 @@ public class Exam {
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-    
+
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExamResult> examResults;
 }

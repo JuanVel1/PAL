@@ -22,4 +22,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllWithRoles();
 
     List<User> findUsersByRoles(@NotNull(message = "El usuario debe tener al menos un rol") @Size(min = 1, message = "El usuario debe tener al menos un rol") Set<Role> roles);
+
 }

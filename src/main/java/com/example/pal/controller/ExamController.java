@@ -119,6 +119,14 @@ public class ExamController {
 
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<ResponseDTO<List<ExamResponseDTO>>> getCourseResults(
+            @PathVariable Long courseId) {
+        List<ExamResponseDTO> results = examService.getAllExamsByCourse(courseId);
+        ResponseDTO<List<ExamResponseDTO>> response = new ResponseDTO<List<ExamResponseDTO>>("Exams retrieved successfully", results);
+        return ResponseEntity.status(200).body(response);
+    }
 }
 
 

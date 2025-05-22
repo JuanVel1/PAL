@@ -11,9 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Base64;
 
 import com.example.pal.repository.ContentRepository;
 import com.example.pal.dto.ResponseDTO;
+import com.example.pal.service.FileStorageService;
 
 @Service
 public class ContentService {
@@ -22,6 +27,9 @@ public class ContentService {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     private final ModelMapper modelMapper;
 
@@ -35,12 +43,14 @@ public class ContentService {
             // Convertir ContentDTO a entidad Content
             Content content = modelMapper.map(contentDTO, Content.class);
 
-            Optional<Course> course = courseService.getCourseById(content.getCourse().getId());
+            Optional<Course> course = courseService.getCourseById(contentDTO.getCourseId());
 
             if (course.isEmpty()) {
                 ResponseDTO<ContentDTO> response = new ResponseDTO<>("Course not found", null);
                 return ResponseEntity.status(404).body(response);
             }
+
+            content.setCourse(course.get());
 
             Content savedContent = contentRepository.save(content);
 
@@ -74,8 +84,20 @@ public class ContentService {
         }
 
         ContentDTO contentDTO = modelMapper.map(content.get(), ContentDTO.class);
-        ResponseDTO<ContentDTO> response = new ResponseDTO<>("Content retrieved successfully", contentDTO);
+        
+        // Si existe un archivo asociado, incluir el archivo directamente
+        if (content.get().getNameFile() != null) {
+            try {
+                Path filePath = fileStorageService.getFilePath(content.get().getNameFile());
+                byte[] fileBytes = Files.readAllBytes(filePath);
+                contentDTO.setFileBytes(fileBytes);
+            } catch (IOException e) {
+                // Si hay error al leer el archivo, continuar sin él
+                System.err.println("Error reading file: " + e.getMessage());
+            }
+        }
 
+        ResponseDTO<ContentDTO> response = new ResponseDTO<>("Content retrieved successfully", contentDTO);
         return ResponseEntity.status(200).body(response);
     }
 
@@ -88,8 +110,8 @@ public class ContentService {
         }
 
         Content content = existingContent.get();
-        content.setType(contentDTO.getType());
         content.setFileUrl(contentDTO.getFileUrl());
+        content.setType(contentDTO.getType());
 
         Content updatedContent = contentRepository.save(content);
         ContentDTO updatedContentDTO = modelMapper.map(updatedContent, ContentDTO.class);

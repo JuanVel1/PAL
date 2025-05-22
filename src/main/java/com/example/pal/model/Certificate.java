@@ -18,10 +18,15 @@ public class Certificate {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "exam_id", nullable = false)
-    private Exam exam;
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     @Column(nullable = false)
-    private LocalDate issue_date;
-     
+    private LocalDate issueDate;
+
+    @Column(nullable = false)
+    private String certificateNumber;
+
+    @Column(nullable = false)
+    private String status; // PENDING, GENERATED, DOWNLOADED
 }

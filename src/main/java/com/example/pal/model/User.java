@@ -36,6 +36,12 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    /*@Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;*/
+
     @NotNull(message = "El usuario debe tener al menos un rol")
     @Size(min = 1, message = "El usuario debe tener al menos un rol")
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,4 +51,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    /*public String getFullName() {
+        return firstName + " " + lastName;
+    }*/
 }

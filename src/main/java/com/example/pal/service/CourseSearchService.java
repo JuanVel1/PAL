@@ -65,13 +65,13 @@ public class CourseSearchService {
         }
 
         // Transformar resultados a DTOs
-        List<CourseDTO> courseDTOs = coursesPage.getContent().stream()
+        List<CourseDTO> CourseDTOs = coursesPage.getContent().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
 
         // Crear respuesta
         CourseSearchResponseDTO response = new CourseSearchResponseDTO();
-        response.setCourses(courseDTOs);
+        response.setCourses(CourseDTOs);
         response.setTotalResults((int) coursesPage.getTotalElements());
         
         response.setPage(page);
