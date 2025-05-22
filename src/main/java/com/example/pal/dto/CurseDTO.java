@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * DTO para representar un curso en los resultados de búsqueda
  */
-public class CurseDTO {
+public class CourseDTO {
     private Long id;
     private String title;
     private String description;
