@@ -30,4 +30,20 @@ public class AnswerService {
     public Answer createAnswer(Answer answer) {
         return answerRepository.save(answer);
     }
+
+    public AnswerDTO getAnswerById(Long id) {
+        throw new UnsupportedOperationException("Unimplemented method 'getAnswerById'");
+    }
+
+    public List<AnswerDTO> getAnswersByQuestionId(Long questionId) {
+        List<Answer> answers = answerRepository.findByQuestionId(questionId);
+        return answers.stream().map(answer -> {
+            AnswerDTO dto = new AnswerDTO();
+            dto.setId(answer.getId());
+            dto.setText(answer.getText());
+            dto.setCorrect(answer.isCorrect());
+            dto.setQuestionId(answer.getQuestion().getId());
+            return dto;
+        }).collect(Collectors.toList());
+    }
 }
