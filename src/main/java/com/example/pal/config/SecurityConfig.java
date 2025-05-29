@@ -33,9 +33,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
-                .headers(headers -> headers.frameOptions().disable());
+                .oauth2Login(oauth2 -> oauth2 
+                    .defaultSuccessUrl("/api/users/all", true))
+                .headers(headers -> headers
+                    .contentSecurityPolicy(csp -> csp
+                        .policyDirectives("frame-ancestors 'self' https://dominio-confiable.com;")));
         return http.build();
     }
 
