@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO<User>> getUserById(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO<User>> getUserById(@PathVariable("id") Long id) {
         Optional<User> user = userService.getUserById(id);
         if (user.isEmpty()) {
             ResponseDTO<User> response = new ResponseDTO<>("User not found", null);

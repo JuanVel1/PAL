@@ -28,6 +28,8 @@ public class AnswerController {
         return ResponseEntity.status(201).body(response);
     }
 
+    
+
 
     @GetMapping("/all")
     public ResponseEntity<ResponseDTO<AnswerDTO>> getAllAnswers() {
@@ -35,6 +37,17 @@ public class AnswerController {
         if (answers.isEmpty()) {
             ResponseDTO<AnswerDTO> response = new ResponseDTO<>("No answers found", null);
             return ResponseEntity.status(400).body(response);
+        }
+        ResponseDTO<AnswerDTO> response = new ResponseDTO<>("Answers retrieved successfully", answers);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("/question/{questionId}")
+    public ResponseEntity<ResponseDTO<AnswerDTO>> getAnswersByQuestionId(@PathVariable("questionId") Long questionId) {
+        List<AnswerDTO> answers = answerService.getAnswersByQuestionId(questionId);
+        if (answers.isEmpty()) {
+            ResponseDTO<AnswerDTO> response = new ResponseDTO<>("No answers found for this question", null);
+            return ResponseEntity.status(404).body(response);
         }
         ResponseDTO<AnswerDTO> response = new ResponseDTO<>("Answers retrieved successfully", answers);
         return ResponseEntity.status(200).body(response);

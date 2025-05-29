@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/exams")
@@ -47,7 +48,7 @@ public class ExamController {
     }
 
     @GetMapping("/{examId}")
-    public ResponseEntity<ResponseDTO<ExamResponseDTO>> getExamById(@PathVariable Long examId) {
+    public ResponseEntity<ResponseDTO<ExamResponseDTO>> getExamById(@PathVariable("examId") Long examId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found"));
 
@@ -58,8 +59,8 @@ public class ExamController {
 
     @GetMapping("/results/{examId}")
     public ResponseEntity<ResponseDTO<ExamResultDTO>> getExamResult(
-            @PathVariable Long examId,
-            @RequestParam Long studentId) {
+            @PathVariable("examId") Long examId,
+            @RequestParam(name = "studentId") Long studentId) {
         try {
             ExamResultDTO result = examResultService.getExamResult(examId, studentId);
             ResponseDTO<ExamResultDTO> response = new ResponseDTO<>("Exam results retrieved successfully", result);
@@ -71,7 +72,7 @@ public class ExamController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseDTO<Exam>> deleteExam(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO<Exam>> deleteExam(@PathVariable("id") Long id) {
         try {
             examService.deleteExamById(id);
             ResponseDTO<Exam> response = new ResponseDTO<>("Exam deleted successfully", null);
@@ -91,12 +92,22 @@ public class ExamController {
 
     @PostMapping("/submit/{examId}")
     public ResponseEntity<?> submitExam(
-            @PathVariable Long examId,
+            @PathVariable("examId") Long examId,
             @RequestBody ExamSubmissionDTO submissionDTO) {
 
         // Buscar el examen
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found"));
+
+        // Buscar el estudiante
+        User student = userRepository.findById(submissionDTO.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        // Verificar si ya existe un resultado para este estudiante y examen
+        Optional<ExamResult> existingResult = examResultRepository.findByExamAndStudent(exam, student);
+        if (existingResult.isPresent()) {
+            return ResponseEntity.badRequest().body(new ResponseDTO<>("El estudiante ya ha realizado este examen", null));
+        }
 
         // Evaluar el examen
         int score = examService.evaluateExam(examId, submissionDTO.getAnswers());
@@ -104,8 +115,6 @@ public class ExamController {
         // Guardar el resultado del examen
         ExamResult examResult = new ExamResult();
         examResult.setExam(exam);
-        User student = userRepository.findById(submissionDTO.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
         examResult.setStudent(student);
         examResult.setSubmissionDate(new Date());
         examResult.setAnswers(submissionDTO.getAnswers());
