@@ -24,8 +24,12 @@ public class FileStorageService {
         Files.createDirectories(uploadPath);
 
         // Generar un nombre único para el archivo
-        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null || originalFileName.isEmpty()) {
+            throw new IOException("Invalid file name");
+        }
+        String cleanFileName = StringUtils.cleanPath(originalFileName);
+        String fileExtension = cleanFileName.substring(cleanFileName.lastIndexOf("."));
         String fileName = UUID.randomUUID().toString() + fileExtension;
 
         // Guardar el archivo
