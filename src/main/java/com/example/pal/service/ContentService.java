@@ -13,12 +13,10 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
+import java.nio.file.Path; 
 
 import com.example.pal.repository.ContentRepository;
-import com.example.pal.dto.ResponseDTO;
-import com.example.pal.service.FileStorageService;
+import com.example.pal.dto.ResponseDTO; 
 
 @Service
 public class ContentService {

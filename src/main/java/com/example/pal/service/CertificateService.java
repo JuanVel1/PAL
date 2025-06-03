@@ -4,14 +4,11 @@ import com.example.pal.model.Certificate;
 import com.example.pal.model.Course;
 import com.example.pal.model.Exam;
 import com.example.pal.model.User;
-import com.example.pal.repository.CertificateRepository;
-import com.example.pal.repository.CourseRepository;
-import com.example.pal.repository.ExamRepository;
-import com.example.pal.repository.UserRepository;
+import com.example.pal.repository.CertificateRepository; 
+import com.example.pal.repository.ExamRepository; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional; 
 import com.example.pal.model.Enrollment;
 
 import java.time.LocalDate;
@@ -22,13 +19,7 @@ import java.util.UUID;
 public class CertificateService {
 
     @Autowired
-    private CertificateRepository certificateRepository;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private CertificateRepository certificateRepository; 
 
     @Autowired
     private EnrollmentService enrollmentService;

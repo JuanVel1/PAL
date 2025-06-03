@@ -27,16 +27,17 @@ public class SecurityConfig {
     public Dotenv dotenv() {
         return Dotenv.load();
     }
-
-    @SuppressWarnings("removal")
+ 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/autenticacion/**", "/oauth2/**", "/login/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2 
-                    .defaultSuccessUrl("/api/users/all", true))
+                    .defaultSuccessUrl("http://localhost:3000/inicio", true)
+                    .failureUrl("http://localhost:3000/login?error=true"))
                 .headers(headers -> headers
                     .contentSecurityPolicy(csp -> csp
                         .policyDirectives("frame-ancestors 'self' https://dominio-confiable.com;")));
