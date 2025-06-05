@@ -16,6 +16,7 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User findByEmail(String email);
 
     @EntityGraph(attributePaths = "roles")
     @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles")

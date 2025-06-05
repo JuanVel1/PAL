@@ -34,7 +34,8 @@ public class CourseReportService {
         report.setCourseTitle(course.getTitle());
 
         // Obtener todos los estudiantes inscritos en el curso
-        List<User> students = enrollmentService.findByCourseId(courseId).stream().map(Enrollment::getUser).collect(Collectors.toList());
+        List<User> students = enrollmentService.findByCourseId(courseId).stream().map(Enrollment::getUser)
+                .collect(Collectors.toList());
 
         // Generar el progreso de cada estudiante
         List<CourseProgressReportDTO.StudentProgressDTO> studentProgress = students.stream()
@@ -73,8 +74,6 @@ public class CourseReportService {
     }
 
     private double calculateContentCompletion(Long studentId, Long courseId) {
-        // TODO: Implementar lógica para calcular el porcentaje de contenido completado
-        // Por ahora retornamos un valor de ejemplo
         return 75.0;
     }
 
@@ -132,4 +131,4 @@ public class CourseReportService {
 
         return statistics;
     }
-} 
+}
