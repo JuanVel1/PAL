@@ -1,5 +1,6 @@
 package com.example.pal.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
+    @Autowired
+    private CustomOAuth2SuccessHandler oauth2SuccessHandler;
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -33,10 +38,11 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/autenticacion/**", "/oauth2/**", "/login/**").permitAll()
+                                .requestMatchers("/api/content/update", "/api/content/delete/*").hasAnyRole("ADMIN", "instructor")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2 
-                    .defaultSuccessUrl("http://localhost:3000/inicio", true)
+                    .successHandler(oauth2SuccessHandler)
                     .failureUrl("http://localhost:3000/login?error=true"))
                 .headers(headers -> headers
                     .contentSecurityPolicy(csp -> csp
@@ -60,10 +66,9 @@ public class SecurityConfig {
         public void addCorsMappings(@NonNull CorsRegistry registry) {
             registry.addMapping("/**")
                     .allowedOrigins("http://localhost:5173", "http://localhost:3000")  // Permitir solicitudes desde el frontend
+                    
                     .allowedMethods("GET", "POST", "PUT", "DELETE")  // Métodos permitidos
                     .allowedHeaders("Content-Type", "Authorization");  // Cabeceras permitidas
         }
     }
-
-
 }
